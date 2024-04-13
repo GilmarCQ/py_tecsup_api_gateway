@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: org.hexagonal
+            uri: ${POSTS_ROUTE_URI:http://localhost:8081}
+            predicates:
+              - Path=/api/v1/vehiculo/**
+            filters:
+              - PrefixPath=/
+              - AddResponseHeader=X-Powered-By,DanSON Gateway Service
+          - id: org.security
+            uri: ${POSTS_ROUTE_URI:http://localhost:8082}
+            predicates:
+              - Path=/api/v1/**
+            filters:
+              - PrefixPath=/
+              - AddResponseHeader=X-Powered-By,DanSON Gateway Services
+
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway:
+            provider:
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
